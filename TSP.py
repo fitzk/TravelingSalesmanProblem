@@ -1,3 +1,13 @@
+######################################################################
+# Project Group:  1                                                  #
+# Group Members:  Eric Cruz, Baljot Singh, Kayla Fitzsimmons         #
+# Course:         CS325-400                                          #
+# Assignment:     Project 4                                          #
+# File:           TSP.py                                             #
+# Description:    To solve travelling salesman problem using greedy  #
+#                 algorithm, will not give optimal solution	         #
+######################################################################
+
 from sys import argv
 import re
 import sys
@@ -51,11 +61,11 @@ def greedy_tsp(cities):
 
 array_w_identifier=[]
 array_wo_identifier=[]
-fileName = 'tsp_example_1.txt' #change this before submit
-if len(argv) > 5:
-    script, filename = argv
+fileName = 'tsp_example_1.txt' #default file name if no file name is given in argument
+if len(sys.argv) > 1:
+	fileName = sys.argv[1]
 
-outFile = fileName[:-4] + '.result'
+outFile = fileName + '.tour'
 try:
     with open(fileName) as f:
         for line in f:
@@ -71,12 +81,8 @@ f2.write(str(d) + '\n')
 for i in tour:
     f2.write(str(i) + '\n')
 print d
-print tour
-print len(tour)==len(set(tour)) #just to check if we visited any city twice
+#print tour
+print len(tour)==len(set(tour)) #just to check if any city is visited twice
 print len(tour)
-# file reads in char by char
-# need to figure out best way to group numbers
-# and how the algorithms should take input
-
 
 f2.close()
