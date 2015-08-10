@@ -5,7 +5,7 @@
 # Assignment:     Project 4                                          #
 # File:           TSP.py                                             #
 # Description:    To solve travelling salesman problem using greedy  #
-#                 algorithm, will not give optimal solution	         #
+#                 algorithm, will not give optimal solution	     #
 ######################################################################
 
 from sys import argv
