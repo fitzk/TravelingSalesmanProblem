@@ -69,7 +69,8 @@ def greedy_tsp(cities):
                     u = i[index - 1]
                     i[index - 1] = -1
                 temp1.append(u)
-                temp2.append(u)
+                if u != -1:
+                    temp2.append(u)
                 break
         if has == False:
             u = temp1.pop()
