@@ -19,7 +19,7 @@ def greedy_tsp(cities):
 
     total_distance = 0
 
-    tour = list()
+    MSTedges = list()
    
     keyy = {}
     parent = {}
@@ -38,59 +38,52 @@ def greedy_tsp(cities):
                 minimum = keyy[v]
                 vertex = v
         keyy[vertex] = 0
+        total_distance += minimum
         temp = []
         temp.append(vertex)
         temp.append(parent[vertex])
-        tour.append(temp)
+        MSTedges.append(temp)
         for v in cities:
             w = calculate_distance(cities[v], cities[vertex])
             if keyy[v] > w and w != 0:
                 keyy[v] = w
                 parent[v] = vertex
-    #######################################
-     temp1 = []
+    dfsTraversal = []
     u = 0
-    temp2 = []
-    temp1.append(-1)
-    temp1.append(0)
-    temp2.append(0)
-    print tour
-    while len(temp1):
-        has = False
-        for i in tour:
+    finalPath = []
+    dfsTraversal.append(-1)
+    while len(dfsTraversal):
+        if u not in finalPath:
+            finalPath.append(u)
+        hasNeighbors = False
+        for i in MSTedges:
             if u in i:
-                has = True
+                dfsTraversal.append(u)
+                hasNeighbors = True
                 index = i.index(u)
                 i[index] = -1
                 if index == 0:
                     u = i[index + 1]
-                    i[index + 1] = -1
                 else:
                     u = i[index - 1]
-                    i[index - 1] = -1
-                temp1.append(u)
-                temp2.append(u)
+                MSTedges.remove(i)
                 break
-        if has == False:
-            u = temp1.pop()
-            if u != -1:
-                temp2.append(u)
-    print temp1
-    print temp2
-    print tour
-    del tour[:]
-    tour[:] = []
-    for i in temp2:
-        if i not in tour:
-            tour.append(i)
-    for i in range(1,len(tour)):
-        total_distance += calculate_distance(cities[i], cities[i-1])
-    ################################################################
-    return total_distance, tour
+        if hasNeighbors == False:
+            u = dfsTraversal.pop()
+            
+    print dfsTraversal
+    print finalPath
+    print len(finalPath)
+    
+    finalDistance = 0
+    for i in range(1,len(finalPath)):
+        finalDistance += calculate_distance(cities[finalPath[i-1]], cities[finalPath[i]])
+    print finalDistance + calculate_distance(cities[finalPath[0]], cities[finalPath[len(finalPath) - 1]])
+    return total_distance, finalPath
 
 array_w_identifier=[]
 array_wo_identifier=[]
-fileName = 'tsp_example_1.txt' #change this before submit
+fileName = 'tsp_example_3.txt' #change this before submit test-input-7
 if len(sys.argv) > 5:
     script, fileName = sys.argv[1]
 
@@ -115,6 +108,6 @@ except IOError as e:
 d, tour = greedy_tsp(maps)
 print d
 print tour
-#print len(tour)==len(set(tour)) #just to check if we visited any city twice
+print len(tour)==len(set(tour)) #just to check if we visited any city twice
 print len(tour)
 #f2.close()
