@@ -37,8 +37,6 @@ def greedy_tsp(cities):
             if keyy[v] > 0 and keyy[v] < minimum:
                 minimum = keyy[v]
                 vertex = v
-        
-        total_distance += minimum
         keyy[vertex] = 0
         temp = []
         temp.append(vertex)
@@ -49,7 +47,44 @@ def greedy_tsp(cities):
             if keyy[v] > w and w != 0:
                 keyy[v] = w
                 parent[v] = vertex
-    
+    #######################################
+     temp1 = []
+    u = 0
+    temp2 = []
+    temp1.append(-1)
+    temp1.append(0)
+    temp2.append(0)
+    print tour
+    while len(temp1):
+        has = False
+        for i in tour:
+            if u in i:
+                has = True
+                index = i.index(u)
+                i[index] = -1
+                if index == 0:
+                    u = i[index + 1]
+                    i[index + 1] = -1
+                else:
+                    u = i[index - 1]
+                    i[index - 1] = -1
+                temp1.append(u)
+                temp2.append(u)
+                break
+        if has == False:
+            u = temp1.pop()
+            temp2.append(u)
+    print temp1
+    print temp2
+    print tour
+    del tour[:]
+    tour[:] = []
+    for i in temp2:
+        if i not in tour:
+            tour.append(i)
+    for i in range(1,len(tour)):
+        total_distance += calculate_distance(cities[i], cities[i-1])
+    ################################################################
     return total_distance, tour
 
 array_w_identifier=[]
