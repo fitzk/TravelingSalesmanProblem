@@ -17,8 +17,6 @@ def calculate_distance(c1, c2):
 # Finds shortest tour using a greedy algorithm
 def greedy_tsp(cities):
 
-    total_distance = 0
-
     MSTedges = list()
    
     keyy = {}
@@ -38,7 +36,6 @@ def greedy_tsp(cities):
                 minimum = keyy[v]
                 vertex = v
         keyy[vertex] = 0
-        total_distance += minimum
         temp = []
         temp.append(vertex)
         temp.append(parent[vertex])
@@ -48,6 +45,7 @@ def greedy_tsp(cities):
             if keyy[v] > w and w != 0:
                 keyy[v] = w
                 parent[v] = vertex
+    
     dfsTraversal = []
     u = 0
     finalPath = []
@@ -70,21 +68,17 @@ def greedy_tsp(cities):
                 break
         if hasNeighbors == False:
             u = dfsTraversal.pop()
-            
-    print dfsTraversal
-    print finalPath
-    print len(finalPath)
     
     finalDistance = 0
     for i in range(1,len(finalPath)):
         finalDistance += calculate_distance(cities[finalPath[i-1]], cities[finalPath[i]])
-    print finalDistance + calculate_distance(cities[finalPath[0]], cities[finalPath[len(finalPath) - 1]])
-    return total_distance, finalPath
+    finalDistance += calculate_distance(cities[finalPath[0]], cities[finalPath[len(finalPath) - 1]])
+    return finalDistance, finalPath
 
 array_w_identifier=[]
 array_wo_identifier=[]
-fileName = 'tsp_example_3.txt' #change this before submit test-input-7
-if len(sys.argv) > 5:
+fileName = 'tsp_example_1.txt' #change this before submit test-input-7 tsp_example_1
+if len(sys.argv) > 1:
     script, fileName = sys.argv[1]
 
 outFile = fileName + '.result'
@@ -102,12 +96,15 @@ except IOError as e:
     print 'Error in opening file '+ fileName
     sys.exit(-1)
 
-#f2 = open(outFile,'w')
+f2 = open(outFile,'w')
 
 #print array_w_identifier
 d, tour = greedy_tsp(maps)
+f2.write(str(d) + '\n')
+for i in tour:
+    f2.write(str(i) + '\n')
 print d
-print tour
+
 print len(tour)==len(set(tour)) #just to check if we visited any city twice
 print len(tour)
-#f2.close()
+f2.close()
