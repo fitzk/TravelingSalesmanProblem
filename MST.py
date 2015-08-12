@@ -79,7 +79,7 @@ array_w_identifier=[]
 array_wo_identifier=[]
 fileName = 'tsp_example_1.txt' #change this before submit test-input-7 tsp_example_1
 if len(sys.argv) > 1:
-    script, fileName = sys.argv[1]
+    fileName = sys.argv[1]
 
 outFile = fileName + '.result'
 maps = {}
