@@ -12,6 +12,7 @@ from sys import argv
 import re
 import sys
 import math
+import time
 
 # Rounds number to the nearest integer
 def nearest_int(num):
@@ -34,7 +35,7 @@ def greedy_tsp(cities):
     current_city = cities[0]
     previous_city = cities[0]
     tour.append(cities[0][0])
-    
+
     del cities[0]
 
     # Find closest neighbor for each city
@@ -50,13 +51,13 @@ def greedy_tsp(cities):
         total_distance += min
         tour.append(cities[neighbor][0])
         current_city = cities[neighbor]
-        
+
         del cities[neighbor]
 
     # Add distance between previous city to current city
     distance_between = calculate_distance(current_city, previous_city)
     total_distance = total_distance + distance_between
-    
+
     return total_distance, tour
 
 array_w_identifier=[]
@@ -75,8 +76,10 @@ except IOError as e:
     sys.exit(-1)
 
 f2 = open(outFile,'w')
-
+start = time.clock()
 d, tour = greedy_tsp(array_w_identifier)
+end = time.clock()
+print "Execution Time: ", end-start
 f2.write(str(d) + '\n')
 for i in tour:
     f2.write(str(i) + '\n')
