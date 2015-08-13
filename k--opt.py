@@ -22,15 +22,16 @@ def totalDist(path, cities):
     finalDistance += calculate_distance(cities[path[0]], cities[path[len(path) - 1]])
     return finalDistance
 
-#creates new route 
 def newRoute(path, i, j):
     newRoute = []
-    for i in range(0, i):
-        newRoute.append(path[i])
+    
+    for x in range(0, i):
+        newRoute.append(path[x])
+    y = j
     while j > i - 1:
         newRoute.append(path[j])
         j = j - 1
-    for i in range(j + 1, len(path)):
+    for i in range(y + 1, len(path)):
         newRoute.append(path[i])
     return newRoute
 
@@ -47,25 +48,31 @@ def greedy_tsp(cities):
 
     newPath = []
     count = 0
+    change = True
     
-    while count < 1:
+    while change:
+        change = False
         count = count + 1
         
         dist =  totalDist(finalPath, cities)
         
-        for i in range(0, len(finalPath) - 1):
+        for i in range(1, len(finalPath) - 1):
             for j in range(i + 1, len(finalPath)):
                 newPath = newRoute(finalPath, i, j)
+                
                 newDist = totalDist(newPath, cities)
                 
                 if newDist < dist:
-                    finalPath = list(newPath)
+                    del finalPath[:]
+                    finalPath[:] = []
+                    finalPath = newPath
+                    change = True
     
     return dist,finalPath
 
 array_w_identifier=[]
 array_wo_identifier=[]
-fileName = 'tsp_example_2.txt' #change this before submit test-input-7 tsp_example_1
+fileName = 'tsp_example_1.txt' #change this before submit test-input-7 tsp_example_1
 if len(sys.argv) > 1:
     fileName = sys.argv[1]
 
@@ -84,11 +91,12 @@ except IOError as e:
     print 'Error in opening file '+ fileName
     sys.exit(-1)
 
-#f2 = open(outFile,'w')
+f2 = open(outFile,'w')
 
 #print array_w_identifier
 d, tour = greedy_tsp(maps)
 print d
+print tour
 print len(tour)==len(set(tour)) #just to check if we visited any city twice
 print len(tour)
-#f2.close()
+f2.close()
