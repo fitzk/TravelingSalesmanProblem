@@ -2,6 +2,7 @@ from sys import argv
 import re
 import sys
 import math
+import time
 
 # Rounds number to the nearest integer
 def nearest_int(num):
@@ -38,85 +39,61 @@ def newRoute(path, i, j):
 # Finds shortest tour using a greedy algorithm
 def greedy_tsp(cities):
 
-    MSTedges = list()
-   
-    keyy = {}
-    parent = {}
+    total_distance = 0
+    neighbor = list()
+    tour = list()
+    copyCities = dict(cities)
+    # Assign source city
     for k in cities:
-        u = k
+        current_city = cities[k]
+        previous_city = cities[k]
+        tour.append(k)
         break
-    for v in cities:
-        keyy[v] = calculate_distance(cities[u], cities[v])
-        parent[v] = u
-   
-    for i in range(0, len(cities) - 1):
-        minimum = sys.maxint
-        vertex = None
-        for v in cities:
-            if keyy[v] > 0 and keyy[v] < minimum:
-                minimum = keyy[v]
-                vertex = v
-        keyy[vertex] = 0
-        temp = []
-        temp.append(vertex)
-        temp.append(parent[vertex])
-        MSTedges.append(temp)
-        for v in cities:
-            w = calculate_distance(cities[v], cities[vertex])
-            if keyy[v] > w and w != 0:
-                keyy[v] = w
-                parent[v] = vertex
-    
-    dfsTraversal = []
-    u = 0
-    finalPath = []
-    dfsTraversal.append(-1)
-    while len(dfsTraversal):
-        if u not in finalPath:
-            finalPath.append(u)
-        hasNeighbors = False
-        for i in MSTedges:
-            if u in i:
-                dfsTraversal.append(u)
-                hasNeighbors = True
-                index = i.index(u)
-                i[index] = -1
-                if index == 0:
-                    u = i[index + 1]
-                else:
-                    u = i[index - 1]
-                MSTedges.remove(i)
-                break
-        if hasNeighbors == False:
-            u = dfsTraversal.pop()
+
+    del cities[0]
+
+    # Find closest neighbor for each city
+    while len(cities) > 0:
+        min = sys.maxint
+        for i in cities:
+            distance = calculate_distance(current_city, cities[i])
+            if distance < min:
+                neighbor = i
+                min = distance
+
+        # Update new total distance
+        total_distance += min
+        tour.append(neighbor)
+        current_city = cities[neighbor]
+
+        del cities[neighbor]
 
     newPath = []
-    count = 0
+    #count = 0
     change = True
-    
-    while change and count < 40:
+    while change:
         change = False
-        count = count + 1
+        #count = count + 1
         
-        dist =  totalDist(finalPath, cities)
+        dist =  totalDist(tour, copyCities)
         
-        for i in range(1, len(finalPath) - 1):
-            for j in range(i + 1, len(finalPath)):
-                newPath = newRoute(finalPath, i, j)
-                
-                newDist = totalDist(newPath, cities)
+        for i in range(1, len(tour) - 1):
+            for j in range(i + 1, len(tour)):
+                newPath = newRoute(tour, i, j)
+
+                newDist = totalDist(newPath, copyCities)
                 
                 if newDist < dist:
-                    del finalPath[:]
-                    finalPath[:] = []
-                    finalPath = newPath
+                    del tour[:]
+                    tour[:] = []
+                    tour = newPath
                     change = True
     
-    return dist,finalPath
+    return dist,tour
 
 array_w_identifier=[]
 array_wo_identifier=[]
-fileName = 'tsp_example_1.txt' #change this before submit test-input-7 tsp_example_1
+fileName = 'test-input-1.txt' #change this before submit test-input-7 tsp_example_1
 if len(sys.argv) > 1:
     fileName = sys.argv[1]
 
@@ -136,11 +113,16 @@ except IOError as e:
     sys.exit(-1)
 
 #f2 = open(outFile,'w')
-
-#print array_w_identifier
+start = time.clock()
 d, tour = greedy_tsp(maps)
+end = time.clock()
+print "Execution Time: ", end-start
+#f2.write(str(d) + '\n')
+#for i in tour:
+    #f2.write(str(i) + '\n')
 print d
-print tour
-print len(tour)==len(set(tour)) #just to check if we visited any city twice
+#print tour
+print len(tour)==len(set(tour)) #just to check if any city is visited twice
 print len(tour)
+
 #f2.close()
